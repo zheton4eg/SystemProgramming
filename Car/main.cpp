@@ -59,9 +59,9 @@ public:
 };
 class Engine
 {
-	friend class Tank;
+	
 public:
-	double speed;
+	double speed;	//RPM
 	double consuption_per_100km;
 	
 	Engine(double consuption_per_100km, double speed=0)
@@ -71,22 +71,16 @@ public:
 			speed>MAX_SPEED ? MAX_SPEED :
 			speed;
 	}
-
 	void Drive(Tank &tank)
 	{
 		double resoult;
-		if (speed < 100)
-		{
-			double The_liter_multiplier = 100 / speed;
-			resoult = consuption_per_100km / The_liter_multiplier;
-			cout << "Вы потратите " << resoult << "л за час" << endl;
-		}
+		
 		 if (speed == 100)
 		{
 		    resoult = consuption_per_100km / 100;
 			cout << "Вы потратите " << resoult << "л за час" << endl;
 		}
-		if (speed > 100)
+		 else
 		{
 			double  The_liter_multiplier = 100 / speed;
 			resoult = consuption_per_100km / The_liter_multiplier;
@@ -96,7 +90,6 @@ public:
 		cout << "Какое расстояние вы хотите проехать в км?"; cin >> distance;
 		if (tank.fuel_level < (consuption_per_100km / 100) * distance)
 		{
-			
 			cout << "Внимание, топлива не хватит, попробуйте снова!" << endl;
 		}
 		else
