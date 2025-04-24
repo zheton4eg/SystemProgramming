@@ -1,5 +1,11 @@
+#include<Windows.h>
 #include<iostream>
-using namespace std;
+#include<conio.h>
+#include<thread>
+
+using std::cin;
+using std::cout;
+using std::endl;
 
 #define MIN_TANK_CAPASITY 20
 #define MAX_TANK_CAPASITY 120
