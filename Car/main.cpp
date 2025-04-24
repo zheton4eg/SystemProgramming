@@ -1,6 +1,7 @@
 #include<iostream>
 #include<conio.h>
 #include<Windows.h>
+#include<time.h>
 using namespace std;
 
 #define MIN_TANK_CAPASITY 20
@@ -142,6 +143,25 @@ public:
 	void get_in()
 	{
 		driver_inside = true;
+		double fuel;
+			cout << "Ќа сколько заправл€емс€? "; cin >> fuel;
+			tank.fill(fuel);
+		char start;
+		cout << "запустить двигатель y/n? "; cin >> start;
+		
+			switch (start)
+			{
+			case 'y':
+				engine.start();
+				
+				break;
+
+			case 'n':
+				engine.stop();
+				break;
+			}
+			
+		
 		panel();
 	}
 	void get_out()
@@ -151,7 +171,7 @@ public:
 	void control()
 	{
 		char key = 0;
-		do 
+		do
 		{
 			key = _getch();
 			switch (key)
@@ -160,14 +180,16 @@ public:
 				driver_inside ? get_out() : get_in();
 				break;
 			}
+		
 		} while (key != Escape);
+		
 	}
 	void panel()
 	{
 		while (driver_inside)
 		{
 			system("CLS");
-			cout << "Fuel level" << tank.get_fuel_level() << "liters\n";
+			cout << "Fuel level " << tank.get_fuel_level() << " liters\n";
 			cout << "Engine is " << (engine.started() ? "started": "stoped") << endl;
 			cout << "Speed:\t" << speed << "km/h\n";
 			Sleep(100);
