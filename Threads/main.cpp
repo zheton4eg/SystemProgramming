@@ -18,25 +18,25 @@ void main()
 	std::thread plus_thread(Plus);
 	std::thread minus_thread(Minus);
 
-	cin.get(); //ожидает нажатия Enter
+	cin.get(); 
 	finish = true;
 
-	if(minus_thread.joinable())minus_thread.join();
-	if(plus_thread.joinable())plus_thread.join();
-	if(plus_thread.joinable())plus_thread.join();
-	if(plus_thread.joinable())plus_thread.join();
-	if(plus_thread.joinable())plus_thread.join();
-	if(plus_thread.joinable())plus_thread.join();
-	if(plus_thread.joinable())plus_thread.join();
-	if(plus_thread.joinable())plus_thread.join();
-	if(plus_thread.joinable())plus_thread.join();
-	
+	if (minus_thread.joinable())minus_thread.join();
+	if (plus_thread.joinable())plus_thread.join();
+	if (plus_thread.joinable())plus_thread.join();
+	if (plus_thread.joinable())plus_thread.join();
+	if (plus_thread.joinable())plus_thread.join();
+	if (plus_thread.joinable())plus_thread.join();
+	if (plus_thread.joinable())plus_thread.join();
+	if (plus_thread.joinable())plus_thread.join();
+	if (plus_thread.joinable())plus_thread.join();
+
 }
 void Plus()
 {
 	while (!finish)
 	{
-			cout << "+";	
+		cout << "+";
 	}
 
 }
