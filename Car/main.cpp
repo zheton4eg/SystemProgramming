@@ -2,7 +2,6 @@
 #include<iostream>
 #include<conio.h>
 #include<thread>
-
 using std::cin;
 using std::cout;
 using std::endl;
