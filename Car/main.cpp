@@ -158,7 +158,7 @@ class Car
 		std::thread panel_thread;
 		std::thread engine_idle_thread;
 		std::thread free_wheeling_thread;
-		std::thread variable_consumption_thread;
+		std::thread consumption_now_thread;
 	}threads_container;	//Ёта структура не имеет имени, и реализует только один экземпл€р.
 public:
 	Car(double consumption, int capacity, int max_speed = 250, int acceleration = 10) :
@@ -253,11 +253,15 @@ public:
 				break;
 			case 'W':case 'w':
 				accelerate();
-				consumption_now();
+				//consumption_now();
+				if (!threads_container.consumption_now_thread.joinable())
+					threads_container.consumption_now_thread = std::thread(&Car::consumption_now, this);
 				break;
 			case 'S':case's':
 				slow_down();
-				consumption_now();
+				//consumption_now();
+				if (!threads_container.consumption_now_thread.joinable())
+					threads_container.consumption_now_thread = std::thread(&Car::consumption_now, this);
 				break;
 			case Escape:
 				stop();
@@ -286,8 +290,10 @@ public:
 	}
 	void consumption_now()
 	{
-		if (speed <= 0 )
-			this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_0_GEAR);
+		while (engine.started())
+		{
+			if (speed <= 0)
+				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_0_GEAR);
 			if (speed > 0 && speed < 61)
 				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_1_GEAR);
 			if (speed > 60 && speed < 101)
@@ -298,9 +304,9 @@ public:
 				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_4_GEAR);
 			if (speed > 200 && speed < 250)
 				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_5_GEAR);
+			std::this_thread::sleep_for(1s);
+		}
 			
-		
-		
 	}
 	
 	void panel()
