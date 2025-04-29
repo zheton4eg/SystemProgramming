@@ -73,15 +73,25 @@ class Engine
 {
 	const double CONSUMPTION;	//расход на 100 км.
 	const double DEFAULT_CONSUMPTION_PER_SECOND;
+	
 	double consumption_per_second;
 	bool is_started;
 public:
+	const double CONSUMPTION_PER_SECOND_IN_0_GEAR;
+	const double CONSUMPTION_PER_SECOND_IN_1_GEAR;
+	const double CONSUMPTION_PER_SECOND_IN_2_GEAR;
+	const double CONSUMPTION_PER_SECOND_IN_3_GEAR;
+	const double CONSUMPTION_PER_SECOND_IN_4_GEAR;
+	const double CONSUMPTION_PER_SECOND_IN_5_GEAR;
 	double get_consumption_per_second()
 	{
 		return consumption_per_second;
 	}
+	double set_consumption_per_second(double new_consumption_per_second)
+	{
+		return  consumption_per_second = new_consumption_per_second;
+	}
 	
-
 	Engine(double consumption) :
 		CONSUMPTION
 		(
@@ -89,10 +99,16 @@ public:
 			consumption > MAX_ENGINE_CONSUMPTION ? MAX_ENGINE_CONSUMPTION :
 			consumption
 		),
-		DEFAULT_CONSUMPTION_PER_SECOND(CONSUMPTION * 3e-5),	//3*10^-5
-	
+		DEFAULT_CONSUMPTION_PER_SECOND(CONSUMPTION   * 3e-5),	//3*10^-5
+		CONSUMPTION_PER_SECOND_IN_0_GEAR(CONSUMPTION * 3e-5),
+		CONSUMPTION_PER_SECOND_IN_1_GEAR(CONSUMPTION * 2e-4),
+		CONSUMPTION_PER_SECOND_IN_2_GEAR(CONSUMPTION * 14e-5),
+		CONSUMPTION_PER_SECOND_IN_3_GEAR(CONSUMPTION * 2e-4),
+		CONSUMPTION_PER_SECOND_IN_4_GEAR(CONSUMPTION * 25e-5),
+		CONSUMPTION_PER_SECOND_IN_5_GEAR(CONSUMPTION * 3e-4),
 		consumption_per_second(DEFAULT_CONSUMPTION_PER_SECOND)
 	{
+		
 		is_started = false;
 		cout << "Engine is ready" << endl;
 	}
@@ -112,11 +128,17 @@ public:
 	{
 		return is_started;
 	}
+	
 	void info()const
 	{
-		cout << "Consumption: " << CONSUMPTION << " liters/100km\n";
-		cout << "Default Consumption: " << DEFAULT_CONSUMPTION_PER_SECOND << " liters/s\n";
-		cout << "Consumption: " << consumption_per_second << " liters/s\n";
+		cout << "Consumption:          " << CONSUMPTION                      << " liters/100km\n";
+		cout << "Default Consumption:  " << DEFAULT_CONSUMPTION_PER_SECOND   << " liters/s\n";
+		cout << "Consumption 1 gear:   " << CONSUMPTION_PER_SECOND_IN_1_GEAR << " liters/s\n";
+		cout << "Consumption 2 gear:   " << CONSUMPTION_PER_SECOND_IN_2_GEAR << " liters/s\n";
+		cout << "Consumption 3 gear:   " << CONSUMPTION_PER_SECOND_IN_3_GEAR << " liters/s\n";
+		cout << "Consumption 4 gear:   " << CONSUMPTION_PER_SECOND_IN_4_GEAR << " liters/s\n";
+		cout << "Consumption 5 gear:   " << CONSUMPTION_PER_SECOND_IN_5_GEAR << " liters/s\n";
+		cout << "Consumption gear:	   " << consumption_per_second           << " liters/s\n";
 	}
 };
 
@@ -151,6 +173,9 @@ public:
 		speed(0),
 		acceleration(acceleration)
 	{
+		if (speed >= 1 && speed < 61)
+			engine.get_consumption_per_second();
+
 		driver_inside = false;
 		cout << "Your car is ready to go, press 'Enter' to get in ;-)" << endl;
 
@@ -206,7 +231,6 @@ public:
 			std::this_thread::sleep_for(1s);
 		}
 	}
-	
 	void control()
 	{
 		char key = 0;
@@ -229,9 +253,11 @@ public:
 				break;
 			case 'W':case 'w':
 				accelerate();
+				consumption_now();
 				break;
 			case 'S':case's':
 				slow_down();
+				consumption_now();
 				break;
 			case Escape:
 				stop();
@@ -258,6 +284,25 @@ public:
 			std::this_thread::sleep_for(1s);
 		}
 	}
+	void consumption_now()
+	{
+		if (speed <= 0 )
+			this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_0_GEAR);
+			if (speed > 0 && speed < 61)
+				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_1_GEAR);
+			if (speed > 60 && speed < 101)
+				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_2_GEAR);
+			if (speed > 100 && speed < 141)
+				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_3_GEAR);
+			if (speed > 140 && speed < 201)
+				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_4_GEAR);
+			if (speed > 200 && speed < 250)
+				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_5_GEAR);
+			
+		
+		
+	}
+	
 	void panel()
 	{
 		while (driver_inside)
@@ -310,7 +355,8 @@ void main()
 #endif // ENGINE_CHECK
 
 	Car car(10, 80, 270);
-	//car.info();
+	car.info();
+	//car.consumption_now();
 	car.control();
 }
 
