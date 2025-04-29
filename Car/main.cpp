@@ -173,8 +173,7 @@ public:
 		speed(0),
 		acceleration(acceleration)
 	{
-		if (speed >= 1 && speed < 61)
-			engine.get_consumption_per_second();
+		
 
 		driver_inside = false;
 		cout << "Your car is ready to go, press 'Enter' to get in ;-)" << endl;
@@ -294,27 +293,25 @@ public:
 		{
 			if (speed <= 0)
 				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_0_GEAR);
-			if (speed > 0 && speed < 61)
+			else if (speed > 0 && speed < 61)
 				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_1_GEAR);
-			if (speed > 60 && speed < 101)
+			else if (speed > 60 && speed < 101)
 				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_2_GEAR);
-			if (speed > 100 && speed < 141)
+			else if (speed > 100 && speed < 141)
 				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_3_GEAR);
-			if (speed > 140 && speed < 201)
+			else if (speed > 140 && speed < 201)
 				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_4_GEAR);
-			if (speed > 200 && speed < 250)
+			else if (speed > 200 && speed < 250)
 				this->engine.set_consumption_per_second(engine.CONSUMPTION_PER_SECOND_IN_5_GEAR);
-			std::this_thread::sleep_for(1s);
-		}
 			
+		}		
 	}
-	
 	void panel()
 	{
 		while (driver_inside)
 		{
 			system("CLS");
-			cout << "Fuel level: " << tank.get_fuel_level() << " liters";
+			cout << "Fuel level: " << tank.get_fuel_level() << " liters\n";
 			if (tank.get_fuel_level() < 5)
 			{
 				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -323,8 +320,10 @@ public:
 				SetConsoleTextAttribute(hConsole, 0x07);
 			}
 			cout << endl;
-			cout << "Engine is " << (engine.started() ? "started" : "stopped") << endl;
 			cout << "Speed:\t" << speed << " km/h\n";
+			cout << engine.get_consumption_per_second() << " liters/s\n";
+			cout << "Engine is " << (engine.started() ? "started" : "stopped") << endl;
+			
 			Sleep(100);
 		}
 	}
@@ -360,15 +359,7 @@ void main()
 	engine.info();
 #endif // ENGINE_CHECK
 
-	Car car(10, 80, 270);
+	Car car(20, 80, 270);
 	car.info();
-	//car.consumption_now();
 	car.control();
 }
-
-/*
--------------------------------------------------------------------
-Thread - это последовательность команд Центральному Процессору (ЦП).
-
--------------------------------------------------------------------
-*/
